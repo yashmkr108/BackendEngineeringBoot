@@ -1,10 +1,10 @@
-package com.yash.backend_engineering;
+package com.yash.hello_application;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BackendEngineeringApplicationTests {
+class HelloApplicationTests {
 
 	@Test
 	void contextLoads() {
