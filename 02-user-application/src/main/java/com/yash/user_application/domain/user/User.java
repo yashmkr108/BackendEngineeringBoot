@@ -1,4 +1,4 @@
-package com.yash.user_application.domain;
+package com.yash.user_application.domain.user;
 
 import com.yash.user_application.enums.Role;
 

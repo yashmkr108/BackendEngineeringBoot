@@ -1,6 +1,6 @@
 package com.yash.user_application.controller;
 
-import com.yash.user_application.domain.User;
+import com.yash.user_application.domain.user.User;
 import com.yash.user_application.dto.user.CreateUserRequest;
 import com.yash.user_application.dto.user.UserResponse;
 import com.yash.user_application.service.UserService;
@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping  // /->route
-    public List<User> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         return userService.getAllUsers();
     }
 
@@ -29,5 +29,16 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
+    }
+
+    @GetMapping("/{id}")
+    public UserResponse getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }
