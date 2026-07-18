@@ -2,6 +2,7 @@ package com.yash.user_application.controller;
 
 import com.yash.user_application.domain.user.User;
 import com.yash.user_application.dto.user.CreateUserRequest;
+import com.yash.user_application.dto.user.UpdateUserRequest;
 import com.yash.user_application.dto.user.UserResponse;
 import com.yash.user_application.service.UserService;
 import jakarta.validation.Valid;
@@ -40,5 +41,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public UserResponse updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserRequest request) {
+
+        return userService.updateUser(id, request);
     }
 }

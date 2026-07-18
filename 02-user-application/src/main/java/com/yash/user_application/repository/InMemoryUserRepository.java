@@ -1,7 +1,6 @@
 package com.yash.user_application.repository;
 
 import com.yash.user_application.domain.user.User;
-import com.yash.user_application.exceptions.UserNotFoundException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -18,10 +17,26 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User save(User user) {
-        user.setId(nextId);
-        users.add(user);
-        nextId++;
-        return user;
+
+        if (user.getId() == null) {
+            user.setId(nextId);
+            nextId++;
+            users.add(user);
+
+            return user;
+        }
+
+        for (int i = 0; i < users.size(); i++) {
+
+            if (users.get(i).getId().equals(user.getId())) {
+                users.set(i, user);
+                return user;
+            }
+        }
+
+        throw new IllegalArgumentException(
+                "Cannot update user with id: " + user.getId()
+        );
     }
 
     @Override
