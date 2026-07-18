@@ -76,7 +76,7 @@ public class UserService {
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+                        .orElseThrow(() -> new UserNotFoundException(id));
         System.out.println(user);
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
