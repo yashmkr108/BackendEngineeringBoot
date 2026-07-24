@@ -4,6 +4,7 @@ import com.yash.user_application.domain.user.User;
 import com.yash.user_application.dto.user.CreateUserRequest;
 import com.yash.user_application.dto.user.UpdateUserRequest;
 import com.yash.user_application.dto.user.UserResponse;
+import com.yash.user_application.enums.Role;
 import com.yash.user_application.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -55,14 +56,25 @@ public class UserController {
 
     @GetMapping(params = "email")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserResponse getUserByEmail(@RequestParam String email){
+    public UserResponse getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email);
     }
 
     @GetMapping("/exists")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Boolean existsByEmail(@RequestParam String email){
+    public Boolean existsByEmail(@RequestParam String email) {
         return userService.existsByEmail(email);
     }
 
+    @GetMapping(params = "role")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<UserResponse> getRoleList(@RequestParam Role role) {
+        return userService.getRoleList(role);
+    }
+
+    @GetMapping(params = {"role", "first_name"})
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<UserResponse> getFirstNameAndRoleList(@RequestParam Role role, @RequestParam String first_name) {
+        return userService.getFirstNameAndRoleList(first_name, role);
+    }
 }

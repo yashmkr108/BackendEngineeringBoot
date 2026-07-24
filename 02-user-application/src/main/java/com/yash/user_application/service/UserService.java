@@ -101,4 +101,24 @@ public class UserService {
     public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    public List<UserResponse> getRoleList(Role role) {
+        List<User> rawUsers = userRepository.findByRole(role);
+        List<UserResponse> users = new ArrayList<>();
+        for (User user : rawUsers) {
+            UserResponse responseUser = userMapper.toResponse(user);
+            users.add(responseUser);
+        }
+        return users;
+    }
+
+    public List<UserResponse> getFirstNameAndRoleList(String first_name, Role role) {
+        List<User> rawUsers = userRepository.findByFirstNameAndRole(first_name, role);
+        List<UserResponse> users = new ArrayList<>();
+        for (User user : rawUsers) {
+            UserResponse responseUser = userMapper.toResponse(user);
+            users.add(responseUser);
+        }
+        return users;
+    }
 }
