@@ -21,7 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository,UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
@@ -62,21 +62,13 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        UserResponse response = new UserResponse();
-
-        response.setId(user.getId());
-        response.setUsername(user.getUsername());
-        response.setEmail(user.getEmail());
-        response.setFirstName(user.getFirstName());
-        response.setLastName(user.getLastName());
-
-        return response;
+        return userMapper.toResponse(user);
     }
 
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
 
         User user = userRepository.findById(id)
-                        .orElseThrow(() -> new UserNotFoundException(id));
+                .orElseThrow(() -> new UserNotFoundException(id));
         System.out.println(user);
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
@@ -94,5 +86,19 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         userRepository.deleteById(id);
+    }
+
+    public UserResponse getUserByEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFoundException(email);
+        }
+
+        User user = optionalUser.get();
+        return userMapper.toResponse(user);
+    }
+
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

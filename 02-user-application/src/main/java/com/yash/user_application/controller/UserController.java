@@ -51,4 +51,18 @@ public class UserController {
 
         return userService.updateUser(id, request);
     }
+
+
+    @GetMapping(params = "email")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public UserResponse getUserByEmail(@RequestParam String email){
+        return userService.getUserByEmail(email);
+    }
+
+    @GetMapping("/exists")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Boolean existsByEmail(@RequestParam String email){
+        return userService.existsByEmail(email);
+    }
+
 }
