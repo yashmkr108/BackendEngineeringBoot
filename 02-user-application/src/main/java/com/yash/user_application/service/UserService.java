@@ -128,13 +128,29 @@ public class UserService {
         return userRepository.getEmailFirstNameLastNameOfUsers();
     }
 
-    public UserStatisticResponse getUserStats(){
+    public UserStatisticResponse getUserStats() {
         Long count = userRepository.count(); // build in method returns the count of the user table
         Long idSum = userRepository.getIdSum();
         Long idMax = userRepository.getMaxId();
         Long idMin = userRepository.getMinId();
         Double idAvg = userRepository.getAvgId();
 
-        return new UserStatisticResponse(count,idSum,idMax,idMin,idAvg);
+        return new UserStatisticResponse(count, idSum, idMax, idMin, idAvg);
+    }
+
+    public List<RoleCountResponse> countUsersByRole() {
+        return userRepository.countUsersByRole();
+    }
+
+    public List<RoleCountResponse> findPopularRoles() {
+        return userRepository.findPopularRoles();
+    }
+
+    public List<Role> getRoles(){
+        return userRepository.getRoles();
+    }
+
+    public List<UserCategoryResponse> getCategories(){
+        return userRepository.getCategories();
     }
 }

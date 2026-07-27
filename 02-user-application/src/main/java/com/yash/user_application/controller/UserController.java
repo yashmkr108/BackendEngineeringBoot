@@ -90,7 +90,32 @@ public class UserController {
 
     @GetMapping("/stats")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserStatisticResponse getUserStats(){
+    public UserStatisticResponse getUserStats() {
         return userService.getUserStats();
     }
+
+    @GetMapping("/roleCount")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<RoleCountResponse> countUsersByRole() {
+        return userService.countUsersByRole();
+    }
+
+    @GetMapping("/popularRole")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<RoleCountResponse> findPopularRoles() {
+        return userService.findPopularRoles();
+    }
+
+    @GetMapping("/roles")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<Role> getRoles(){
+        return userService.getRoles();
+    }
+
+    @GetMapping("/categories")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<UserCategoryResponse> getCategories(){
+        return userService.getCategories();
+    }
+
 }

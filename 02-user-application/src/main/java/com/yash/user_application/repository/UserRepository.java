@@ -1,6 +1,8 @@
 package com.yash.user_application.repository;
 
 import com.yash.user_application.domain.user.User;
+import com.yash.user_application.dto.user.RoleCountResponse;
+import com.yash.user_application.dto.user.UserCategoryResponse;
 import com.yash.user_application.dto.user.UserSummary;
 import com.yash.user_application.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,7 +40,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                             u.email,
                             u.firstName,
                             u.lastName
-                ) 
+                )
                 From User u
             """)
     List<UserSummary> getEmailFirstNameLastNameOfUsers();
@@ -63,4 +65,39 @@ public interface UserRepository extends JpaRepository<User, Long> {
             """)
     Double getAvgId();
 
+    @Query("""
+            Select new com.yash.user_application.dto.user.RoleCountResponse(u.role,Count(u))
+            From User u
+            Group by u.role
+            """)
+    List<RoleCountResponse> countUsersByRole();
+
+    @Query("""
+            SELECT new com.yash.user_application.dto.user.RoleCountResponse(
+                u.role,
+                COUNT(u)
+            )
+            From User u
+            Group By u.role
+            Having Count(u) > 3
+            """)
+    List<RoleCountResponse> findPopularRoles();
+
+    @Query("""
+            Select DISTINCT(u.role) From User u
+            """)
+    List<Role> getRoles();
+
+    @Query("""
+            Select new com.yash.user_application.dto.user.UserCategoryResponse(
+                        u.firstName,
+                        CASE
+                              WHEN u.role = com.yash.user_application.enums.Role.ADMIN THEN 'Staff'
+                              WHEN u.role = com.yash.user_application.enums.Role.TEACHER THEN 'Staff'
+                              ELSE 'Learner'
+                        END
+                        )
+            From User u
+            """)
+    List<UserCategoryResponse> getCategories();
 }
