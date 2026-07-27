@@ -1,9 +1,7 @@
 package com.yash.user_application.service;
 
 import com.yash.user_application.domain.user.User;
-import com.yash.user_application.dto.user.CreateUserRequest;
-import com.yash.user_application.dto.user.UpdateUserRequest;
-import com.yash.user_application.dto.user.UserResponse;
+import com.yash.user_application.dto.user.*;
 import com.yash.user_application.enums.Role;
 import com.yash.user_application.exceptions.UserNotFoundException;
 import com.yash.user_application.mapper.user.UserMapper;
@@ -89,7 +87,7 @@ public class UserService {
     }
 
     public UserResponse getUserByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        Optional<User> optionalUser = userRepository.getUserByEmail(email);
         if (optionalUser.isEmpty()) {
             throw new UserNotFoundException(email);
         }
@@ -103,7 +101,7 @@ public class UserService {
     }
 
     public List<UserResponse> getRoleList(Role role) {
-        List<User> rawUsers = userRepository.findByRole(role);
+        List<User> rawUsers = userRepository.findByRoleOrderByIdDesc(role);
         List<UserResponse> users = new ArrayList<>();
         for (User user : rawUsers) {
             UserResponse responseUser = userMapper.toResponse(user);
@@ -120,5 +118,23 @@ public class UserService {
             users.add(responseUser);
         }
         return users;
+    }
+
+    public List<String> getEmails() {
+        return userRepository.getEmails();
+    }
+
+    public List<UserSummary> getEmailFirstNameLastNameOfUsers() {
+        return userRepository.getEmailFirstNameLastNameOfUsers();
+    }
+
+    public UserStatisticResponse getUserStats(){
+        Long count = userRepository.count(); // build in method returns the count of the user table
+        Long idSum = userRepository.getIdSum();
+        Long idMax = userRepository.getMaxId();
+        Long idMin = userRepository.getMinId();
+        Double idAvg = userRepository.getAvgId();
+
+        return new UserStatisticResponse(count,idSum,idMax,idMin,idAvg);
     }
 }

@@ -1,9 +1,6 @@
 package com.yash.user_application.controller;
 
-import com.yash.user_application.domain.user.User;
-import com.yash.user_application.dto.user.CreateUserRequest;
-import com.yash.user_application.dto.user.UpdateUserRequest;
-import com.yash.user_application.dto.user.UserResponse;
+import com.yash.user_application.dto.user.*;
 import com.yash.user_application.enums.Role;
 import com.yash.user_application.service.UserService;
 import jakarta.validation.Valid;
@@ -76,5 +73,24 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<UserResponse> getFirstNameAndRoleList(@RequestParam Role role, @RequestParam String first_name) {
         return userService.getFirstNameAndRoleList(first_name, role);
+    }
+
+    @GetMapping("/emails")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<String> getEmails() {
+        return userService.getEmails();
+    }
+
+    // This return the selected fields from the user entity
+    @GetMapping("/selectedFields")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<UserSummary> getEmailFirstNameLastNameOfUsers() {
+        return userService.getEmailFirstNameLastNameOfUsers();
+    }
+
+    @GetMapping("/stats")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public UserStatisticResponse getUserStats(){
+        return userService.getUserStats();
     }
 }
