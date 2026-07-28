@@ -26,11 +26,16 @@ public class User {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+
+    @Column(nullable = false, name = "is_active")
+    private Boolean isActive = true;
 
     public Long getId() {
         return id;
@@ -86,6 +91,14 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
 }

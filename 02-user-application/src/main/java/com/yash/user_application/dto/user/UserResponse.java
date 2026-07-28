@@ -7,6 +7,7 @@ public class UserResponse {
     private String email;
     private String firstName;
     private String lastName;
+    private Boolean isActive;
 
     public Long getId() {
         return id;
@@ -48,4 +49,11 @@ public class UserResponse {
         this.lastName = lastName;
     }
 
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 }

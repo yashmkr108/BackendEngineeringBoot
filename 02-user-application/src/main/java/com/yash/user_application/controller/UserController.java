@@ -118,4 +118,28 @@ public class UserController {
         return userService.getCategories();
     }
 
+    @PutMapping("/deactivate")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Integer deactivateAllStudents(){
+        return userService.deactivateAllStudents();
+    }
+
+    @GetMapping("/active")
+    public List<UserResponse> getActiveUsers(){
+        return userService.getActiveUsers();
+    }
+
+    @GetMapping("/inactive")
+    public List<UserResponse> getInactiveUsers(){
+        return userService.getInactiveUsers();
+    }
+
+    @PatchMapping("/deactivate/{id}")
+    public Integer deactivateUser(@PathVariable Long id){
+        return userService.deactivateUser(id);
+    }
+    @PatchMapping("/activate/{id}")
+    public Integer activateUser(@PathVariable Long id){
+        return userService.activateUser(id);
+    }
 }

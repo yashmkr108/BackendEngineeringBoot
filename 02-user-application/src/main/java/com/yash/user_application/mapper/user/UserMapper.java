@@ -16,6 +16,7 @@ public class UserMapper {
         response.setEmail(user.getEmail());
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
+        response.setActive(user.isActive());
 
         return response;
     }

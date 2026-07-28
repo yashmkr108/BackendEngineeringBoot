@@ -4,11 +4,12 @@ import com.yash.user_application.domain.user.User;
 import com.yash.user_application.dto.user.*;
 import com.yash.user_application.enums.Role;
 import com.yash.user_application.exceptions.UserNotFoundException;
+import com.yash.user_application.mapper.user.MultipleUserMapper;
 import com.yash.user_application.mapper.user.UserMapper;
 import com.yash.user_application.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,21 +19,17 @@ public class UserService {
     // adding user repository dependency
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final MultipleUserMapper multipleUserMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, MultipleUserMapper multipleUserMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.multipleUserMapper = multipleUserMapper;
     }
 
     public List<UserResponse> getAllUsers() {
-
-        List<User> users = userRepository.findAll();
-        List<UserResponse> responses = new ArrayList<>();
-        for (User user : users) {
-            responses.add(userMapper.toResponse(user));
-        }
-
-        return responses;
+        List<User> rawUsers = userRepository.findAll();
+        return multipleUserMapper.toAllUsersResponse(rawUsers);
     }
 
     public UserResponse createUser(CreateUserRequest request) {
@@ -102,22 +99,12 @@ public class UserService {
 
     public List<UserResponse> getRoleList(Role role) {
         List<User> rawUsers = userRepository.findByRoleOrderByIdDesc(role);
-        List<UserResponse> users = new ArrayList<>();
-        for (User user : rawUsers) {
-            UserResponse responseUser = userMapper.toResponse(user);
-            users.add(responseUser);
-        }
-        return users;
+        return multipleUserMapper.toAllUsersResponse(rawUsers);
     }
 
     public List<UserResponse> getFirstNameAndRoleList(String first_name, Role role) {
         List<User> rawUsers = userRepository.findByFirstNameAndRole(first_name, role);
-        List<UserResponse> users = new ArrayList<>();
-        for (User user : rawUsers) {
-            UserResponse responseUser = userMapper.toResponse(user);
-            users.add(responseUser);
-        }
-        return users;
+        return multipleUserMapper.toAllUsersResponse(rawUsers);
     }
 
     public List<String> getEmails() {
@@ -146,11 +133,36 @@ public class UserService {
         return userRepository.findPopularRoles();
     }
 
-    public List<Role> getRoles(){
+    public List<Role> getRoles() {
         return userRepository.getRoles();
     }
 
-    public List<UserCategoryResponse> getCategories(){
+    public List<UserCategoryResponse> getCategories() {
         return userRepository.getCategories();
+    }
+
+    @Transactional
+    public Integer deactivateAllStudents() {
+        return userRepository.deactivateAllStudents(Role.STUDENT);
+    }
+
+    public List<UserResponse> getActiveUsers() {
+        List<User> rawUsers = userRepository.getActiveUsers();
+        return multipleUserMapper.toAllUsersResponse(rawUsers);
+    }
+
+    public List<UserResponse> getInactiveUsers() {
+        List<User> rawUsers = userRepository.getInactiveUsers();
+        return multipleUserMapper.toAllUsersResponse(rawUsers);
+    }
+
+    @Transactional
+    public Integer deactivateUser(Long id){
+        return userRepository.updateActiveStatus(id,false);
+    }
+
+    @Transactional
+    public Integer activateUser(Long id){
+        return userRepository.updateActiveStatus(id,true);
     }
 }
