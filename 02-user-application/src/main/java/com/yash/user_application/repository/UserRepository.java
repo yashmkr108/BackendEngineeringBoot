@@ -1,10 +1,7 @@
 package com.yash.user_application.repository;
 
 import com.yash.user_application.domain.user.User;
-import com.yash.user_application.dto.user.RoleCountResponse;
-import com.yash.user_application.dto.user.UserCategoryResponse;
-import com.yash.user_application.dto.user.UserResponse;
-import com.yash.user_application.dto.user.UserSummary;
+import com.yash.user_application.dto.user.*;
 import com.yash.user_application.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -121,12 +118,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
             """)
     List<User> getInactiveUsers();
 
-    @Modifying
     @Query("""
                 UPDATE User u
                 SET u.isActive = :active
-                WHERE u.id = :id
+                WHERE id = :id
             """)
     int updateActiveStatus(@Param("id") Long id,
                            @Param("active") boolean active);
+
+    @Query(value = """
+                UPDATE users
+                SET is_active = :active
+                WHERE id = :id
+                RETURNING id As id, email As email, is_active As isActive      
+            """,nativeQuery = true)
+    ActiveStatusProjection updateActiveStatusNative(@Param("id") Long id,
+                                                        @Param("active") boolean active);
+
 }

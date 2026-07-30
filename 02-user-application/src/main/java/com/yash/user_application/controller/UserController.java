@@ -4,6 +4,8 @@ import com.yash.user_application.dto.user.*;
 import com.yash.user_application.enums.Role;
 import com.yash.user_application.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +22,8 @@ public class UserController {
     }
 
     @GetMapping  // /->route
-    public List<UserResponse> getAllUsers() {
-        return userService.getAllUsers();
+    public Page<UserResponse> getAllUsers(Pageable pageable) {
+        return userService.getAllUsers(pageable);
     }
 
     @PostMapping
@@ -141,5 +143,10 @@ public class UserController {
     @PatchMapping("/activate/{id}")
     public Integer activateUser(@PathVariable Long id){
         return userService.activateUser(id);
+    }
+
+    @PatchMapping("/activateNative/{id}")
+    public ActiveStatusProjection activateUserNative(@PathVariable Long id){
+        return userService.activateUserNative(id);
     }
 }

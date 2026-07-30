@@ -8,6 +8,8 @@ import com.yash.user_application.mapper.user.MultipleUserMapper;
 import com.yash.user_application.mapper.user.UserMapper;
 import com.yash.user_application.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,9 +29,9 @@ public class UserService {
         this.multipleUserMapper = multipleUserMapper;
     }
 
-    public List<UserResponse> getAllUsers() {
-        List<User> rawUsers = userRepository.findAll();
-        return multipleUserMapper.toAllUsersResponse(rawUsers);
+    public Page<UserResponse> getAllUsers(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(userMapper::toResponse);
     }
 
     public UserResponse createUser(CreateUserRequest request) {
@@ -164,5 +166,9 @@ public class UserService {
     @Transactional
     public Integer activateUser(Long id){
         return userRepository.updateActiveStatus(id,true);
+    }
+    @Transactional
+    public ActiveStatusProjection activateUserNative(Long id){
+        return userRepository.updateActiveStatusNative(id,true);
     }
 }
